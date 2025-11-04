@@ -1,11 +1,15 @@
 package ar.edu.unju.escmi.entities;
 
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "clientes")
@@ -15,21 +19,26 @@ public class Cliente {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false)
+	@Column(name="cli_nombre", nullable = false, length = 100)
 	private String nombre;
 
-	@Column(nullable = false)
+	@Column(name="cli_apellido", nullable = false)
 	private String apellido;
 
+	@Column(name="cli_domicilio")
 	private String domicilio;
 
+	@Column(name="cli_dni", nullable = false, unique = true)
 	private int dni;
 
+	@Transient
 	private boolean estado;
 
+	/* Constructor por defecto */
 	public Cliente() {
 	}
 
+	/* Constructor parametrizado */
 	public Cliente(String nombre, String apellido, String domicilio, int dni, boolean estado) {
 		this.nombre = nombre;
 		this.apellido = apellido;
@@ -38,6 +47,7 @@ public class Cliente {
 		this.estado = estado;
 	}
 
+	/* Getters y Setters */
 	public Long getId() {
 		return id;
 	}
@@ -85,6 +95,10 @@ public class Cliente {
 	public void setEstado(boolean estado) {
 		this.estado = estado;
 	}
+
+	/* Relacion entre Cliente y Factura */
+	@OneToMany(mappedBy = "cliente")
+	private List<Factura> facturas;
 
 	@Override
 	public String toString() {
