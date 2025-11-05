@@ -1,88 +1,59 @@
-
-/*package ar.edu.unju.escmi.dao.imp;
+package ar.edu.unju.escmi.dao.imp;
 
 import java.util.List;
-
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.TypedQuery;
 
 import ar.edu.unju.escmi.config.EmfSingleton;
 import ar.edu.unju.escmi.dao.IClienteDao;
 import ar.edu.unju.escmi.entities.Cliente;
+import jakarta.persistence.EntityManager;
 
 public class ClienteDaoImp implements IClienteDao {
 
-	private static ClienteDaoImp instancia = new ClienteDaoImp();
-	private EntityManagerFactory emf;
+    private static EntityManager manager = EmfSingleton.getInstance().getEmf().createEntityManager();
 
-	private ClienteDaoImp() {
-		this.emf = EmfSingleton.getInstance().getEmf();
-	}
+    @Override
+    public void guardarCliente(Cliente cliente) {
+        try{
+            manager.getTransaction().begin();
+            manager.persist(cliente);
+            manager.getTransaction().commit();
+        }catch(Exception e){
+            if (manager.getTransaction() != null){
+                manager.getTransaction().rollback();
+            }
+            System.out.println("No se pudo agregar el producto");
+        }finally{
+            manager.close();
+        }
+        
+    }
 
-	public static ClienteDaoImp getInstance() {
-		return instancia;
-	}
+    @Override
+    public void modificarCliente(Cliente cliente) {
+        try{
+            manager.getTransaction().begin();
+            manager.merge(cliente);
+            manager.getTransaction().commit();
+        }catch(Exception e){
+            if(manager.getTransaction()!=null){
+                manager.getTransaction().rollback();
+            }
+            System.out.println("No se pudo modificar los datos del producto");
+        }finally{
+            manager.close();
+        }
+    }
 
 	@Override
-	public void save(Cliente cliente) {
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
+	public List<Cliente> obtenerClientes() {
 		try {
-			tx.begin();
-			if (cliente.getId() == null) {
-				em.persist(cliente);
-			} else {
-				em.merge(cliente);
-			}
-			tx.commit();
-		} catch (RuntimeException e) {
-			if (tx.isActive()) tx.rollback();
-			throw e;
-		} finally {
-			em.close();
+        return manager.createQuery("SELECT c FROM Cliente c", Cliente.class).getResultList();
+		}catch(Exception e){
+			System.out.println("Error al obtener la lista de clientes: " + e.getMessage());
+			return null;
+		}finally{
+			manager.close();
 		}
 	}
 
-	@Override
-	public Cliente findById(Long id) {
-		EntityManager em = emf.createEntityManager();
-		try {
-			return em.find(Cliente.class, id);
-		} finally {
-			em.close();
-		}
-	}
-
-	@Override
-	public List<Cliente> findAll() {
-		EntityManager em = emf.createEntityManager();
-		try {
-			TypedQuery<Cliente> query = em.createQuery("SELECT c FROM Cliente c", Cliente.class);
-			return query.getResultList();
-		} finally {
-			em.close();
-		}
-	}
-
-	@Override
-	public void delete(Long id) {
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		try {
-			tx.begin();
-			Cliente c = em.find(Cliente.class, id);
-			if (c != null) {
-				em.remove(c);
-			}
-			tx.commit();
-		} catch (RuntimeException e) {
-			if (tx.isActive()) tx.rollback();
-			throw e;
-		} finally {
-			em.close();
-		}
-	}
-
-}*/
+}

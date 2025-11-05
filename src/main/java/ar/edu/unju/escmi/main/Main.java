@@ -2,6 +2,10 @@ package ar.edu.unju.escmi.main;
 
 import java.util.Scanner;
 
+/* import ar.edu.unju.escmi.dao.IProductoDao;
+import ar.edu.unju.escmi.dao.imp.ProductoDaoImp;
+import ar.edu.unju.escmi.entities.Producto; */
+
 public class Main {
     public static void main(String[] args) {
 
@@ -42,7 +46,7 @@ public class Main {
                     // Lógica para eliminar una factura
                     break;
                 case 6:
-                    // Lógica para eliminar un producto
+                    // Lógica para eliminar un cliente
                     break;
                 case 7:
                     // Lógica para modificar datos de cliente
@@ -52,6 +56,16 @@ public class Main {
                     break;
                 case 9:
                     // Lógica para eliminar producto (eliminación lógica)
+                    /*
+                    System.out.println("Ingrese id de producto a eliminar");
+                    Long idProductoAEliminar = scanner.nextLong();
+                    IProductoDao productoDao = new ProductoDaoImp();
+                    Producto p = productoDao.obtenerProducto(idProductoAEliminar); // obtener producto
+                    if (p != null) {
+                    p.setEstado(false); // false = marca como eliminado
+                    productoDao.modificarProducto(p); // actualizar en la BD
+                    }
+                    */
                     break;
                 case 10:
                     // Lógica para mostrar todas las facturas
