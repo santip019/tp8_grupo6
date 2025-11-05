@@ -5,12 +5,10 @@ import ar.edu.unju.escmi.entities.Cliente;
 
 public interface IClienteDao {
 
-	void save(Cliente cliente);
+	public void guardarCliente (Cliente cliente);
 
-	Cliente findById(Long id);
+	public void modificarCliente (Cliente cliente);
 
-	List<Cliente> findAll();
-
-	void delete(Long id);
+	public List<Cliente> obtenerClientes();
 
 }
