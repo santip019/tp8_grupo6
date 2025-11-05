@@ -100,6 +100,7 @@ public class Cliente {
 	@OneToMany(mappedBy = "cliente")
 	private List<Factura> facturas;
 
+	/* Metodos */
 	@Override
 	public String toString() {
 		return "Cliente{" +

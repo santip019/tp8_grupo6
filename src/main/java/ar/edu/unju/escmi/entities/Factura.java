@@ -97,4 +97,19 @@ public class Factura {
     @OneToMany(mappedBy = "factura")
     private List<DetalleFactura> detallesFactura;
 
+    /* Metodos */
+    @Override
+    public String toString() {
+        return "Factura [id=" + id + ", fecha=" + fecha + ", domicilio=" + domicilio + ", total=" + total + ", estado="
+                + estado + ", cliente=" + cliente + ", detallesFactura=" + detallesFactura + "]";
+    }
+
+    public void calcularTotal() {
+        for (DetalleFactura detalle : detallesFactura) {
+            if (detalle != null) {
+                this.total += detalle.getSubtotal();
+            }
+        }
+    }
+    
 }

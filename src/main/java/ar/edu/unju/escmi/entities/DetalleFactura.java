@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
 
@@ -63,4 +64,24 @@ public class DetalleFactura {
     @JoinColumn(name="factura_id")
     private Factura factura;
 	
+    /* Relacion entre DetalleFactura y Producto */
+    @OneToOne
+    @JoinColumn(name="producto_id")
+    private Producto producto;
+
+    /* Metodos */
+    @Override
+    public String toString() {
+        return "DetalleFactura [id=" + id + ", cantidad=" + cantidad 
+                + ", subtotal=" + subtotal + ", factura=" + factura
+                + ", producto=" + producto + "]";
+    }
+
+    public void calcularSubtotal () {
+        if (producto != null)
+            this.subtotal = this.cantidad * producto.getPrecioUnitario();
+        else
+            this.subtotal = 0;
+    }
+    
 }
