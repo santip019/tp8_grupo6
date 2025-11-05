@@ -1,5 +1,5 @@
 
-package ar.edu.unju.escmi.dao.imp;
+/*package ar.edu.unju.escmi.dao.imp;
 
 import java.util.List;
 
@@ -85,4 +85,4 @@ public class ClienteDaoImp implements IClienteDao {
 		}
 	}
 
-}
+}*/
