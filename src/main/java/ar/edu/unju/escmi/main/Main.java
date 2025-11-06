@@ -10,8 +10,11 @@ import ar.edu.unju.escmi.dao.IClienteDao;
 import ar.edu.unju.escmi.dao.imp.ClienteDaoImp;
 import ar.edu.unju.escmi.entities.Cliente;
 import ar.edu.unju.escmi.dao.imp.FacturaDaoImp;
+import ar.edu.unju.escmi.dao.imp.ProductoDaoImp;
 import ar.edu.unju.escmi.dao.IFacturaDao;
+import ar.edu.unju.escmi.dao.IProductoDao;
 import ar.edu.unju.escmi.entities.Factura;
+import ar.edu.unju.escmi.entities.Producto;
 
 public class Main {
 
@@ -46,12 +49,14 @@ public class Main {
                     break;
                 case 2:
                     // Lógica para alta de producto
+                    altaProducto(scanner);
                     break;
                 case 3:
                     // Lógica para realizar la venta de productos
                     break;
                 case 4:
                     // Lógica para buscar una factura por número
+                    buscarFactura(scanner);
                     break;
                 case 5:
                     // Lógica para eliminar una factura
@@ -66,6 +71,7 @@ public class Main {
                     break;
                 case 8:
                     // Lógica para modificar precio de producto
+                    modificarProd(scanner);
                     break;
                 case 9:
                     // Lógica para eliminar producto (eliminación lógica)
@@ -261,5 +267,60 @@ public class Main {
         }
 
     }
+        private static void altaProducto(Scanner scanner) {
+            System.out.println("\n==== Alta de Producto ====");
+            System.out.print("Ingrese la descripción del producto: ");
+            String descripcion = scanner.nextLine();
+            
+            System.out.print("Ingrese el precio unitario: ");
+            double precio = scanner.nextDouble();
+            scanner.nextLine(); // limpiar buffer
 
+            Producto producto = new Producto();
+            producto.setDescripcion(descripcion);
+            producto.setPrecioUnitario(precio);
+
+            IProductoDao productoDao = new ProductoDaoImp();
+            productoDao.agregarProducto(producto);
+            System.out.println("Producto agregado correctamente:");
+        }
+
+        private static void buscarFactura(Scanner scanner) {
+            System.out.println("\n==== Buscar Factura ====");
+            System.out.print("Ingrese el número de la factura: ");
+            long id = scanner.nextLong();
+            
+            IFacturaDao facturaDao = new FacturaDaoImp();
+            Factura factura = facturaDao.buscarFacturaPorId(id);
+            if (factura != null) {
+                System.out.println("\n ==== Factura encontrada ====");
+                System.out.println(factura); // Usa el toString() de Factura
+                } else {
+                    System.out.println("No se encontró ninguna factura con el ID: " + id);
+                }
+
+        }
+
+        public static void modificarProd(Scanner scanner) {
+            System.out.println("\n==== Modificar Precio de Producto ====");
+            System.out.print("Ingrese el ID del producto: ");
+            Long idProducto = scanner.nextLong();
+            
+            IProductoDao productoDao = new ProductoDaoImp();
+            Producto producto = productoDao.obtenerProductoPorId(idProducto);
+            if (producto == null) {
+                System.out.println(" No se encontró ningún producto con el ID: " + idProducto);
+            }else{
+            System.out.println("Producto encontrado:");
+            System.out.println(producto);
+            System.out.print("Ingrese el nuevo precio: ");
+            double nuevoPrecio = scanner.nextDouble();
+            producto.setPrecioUnitario(nuevoPrecio);
+            productoDao.modificarProducto(producto);
+            System.out.println(" Precio actualizado correctamente.");
+            }
+        }
 }
+    
+
+
