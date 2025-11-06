@@ -14,25 +14,24 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.persistence.JoinColumn;
 
-
 @Entity
 @Table(name = "facturas")
 public class Factura {
     @Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column (name="fa_facha_de_emision", nullable = false)
+    @Column(name = "fa_facha_de_emision", nullable = false)
     private LocalDate fecha;
 
-	@Column(name="fa_domicilio_cliente")
-	private String domicilio;
+    @Column(name = "fa_domicilio_cliente")
+    private String domicilio;
 
-	@Column(name="fa_total", nullable = false, precision = 10, scale = 2)
-	private double total;
+    @Column(name = "fa_total", nullable = false)
+    private double total;
 
-	@Transient
-	private boolean estado;
+    @Transient
+    private boolean estado;
 
     /* Constructor por defecto */
     public Factura() {
@@ -90,7 +89,7 @@ public class Factura {
 
     /* Relacion entre Cliente y Factura */
     @ManyToOne
-    @JoinColumn(name="cliente_id")
+    @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
     /* Relacion entre DetalleFactura y Factura */
@@ -111,5 +110,5 @@ public class Factura {
             }
         }
     }
-    
+
 }

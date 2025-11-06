@@ -23,7 +23,7 @@ public class ClienteDaoImp implements IClienteDao {
             }
             System.out.println("No se pudo agregar el cliente");
         } finally {
-            manager.close();
+            manager.clear();
         }
 
     }

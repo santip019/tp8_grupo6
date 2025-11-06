@@ -12,17 +12,17 @@ import jakarta.persistence.Transient;
 @Table(name = "productos")
 public class Producto {
     @Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Column(name="prod_descripcion", nullable = false, length = 100)
-	private String descripcion;
+    @Column(name = "prod_descripcion", nullable = false, length = 100)
+    private String descripcion;
 
-	@Column(name="prod_precio_unitario", nullable = false, precision = 10, scale = 2)
-	private double precioUnitario;
+    @Column(name = "prod_precio_unitario", nullable = false)
+    private double precioUnitario;
 
-	@Transient
-	private boolean estado;
+    @Transient
+    private boolean estado;
 
     /* Constructor por defecto */
     public Producto() {
@@ -75,5 +75,5 @@ public class Producto {
         return "Producto [id=" + id + ", descripcion=" + descripcion + ", precioUnitario=" + precioUnitario
                 + ", estado=" + estado + "]";
     }
-    
+
 }
