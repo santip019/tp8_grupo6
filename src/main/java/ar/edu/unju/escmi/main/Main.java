@@ -1,5 +1,6 @@
 package ar.edu.unju.escmi.main;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /* import ar.edu.unju.escmi.dao.IProductoDao;
@@ -36,11 +37,12 @@ public class Main {
             System.out.println("13- Salir.");
             System.out.print("Seleccione una opción: ");
             op = scanner.nextInt();
+            scanner.nextLine(); // Consumir el salto de línea
 
             switch (op) {
                 case 1:
                     // Lógica para alta de cliente
-                    altaCliente();
+                    altaCliente(scanner);
                     break;
                 case 2:
                     // Lógica para alta de producto
@@ -100,9 +102,7 @@ public class Main {
         scanner.close();
     }
 
-    private static void altaCliente() {
-
-        Scanner scanner = new Scanner(System.in);
+    private static void altaCliente(Scanner scanner) {
 
         System.out.println("****** Alta de Cliente ******");
 
@@ -112,8 +112,25 @@ public class Main {
         System.out.println("Ingrese el apellido del cliente:");
         String apellido = scanner.nextLine();
 
-        System.out.println("Ingrese el dni del cliente:");
-        Integer dni = scanner.nextInt();
+        // VALIDACIÓN PARA DNI
+        Integer dni = null;
+
+        do {
+            System.out.println("Ingrese el dni del cliente (solo números):");
+
+            try {
+
+                dni = scanner.nextInt();
+                scanner.nextLine(); // Consumir el '\n'
+
+            } catch (InputMismatchException e) {
+
+                System.out.println(" Entrada no válida. Por favor, ingrese solo números para el DNI.");
+                scanner.nextLine(); // Consumir la entrada no válida
+
+            }
+
+        } while (dni == null);
 
         System.out.println("Ingrese el domicilio del cliente:");
         String domicilio = scanner.nextLine();
@@ -123,47 +140,86 @@ public class Main {
         cliente.setApellido(apellido);
         cliente.setDni(dni);
         cliente.setDomicilio(domicilio);
+        cliente.setEstado(true);
 
         IClienteDao clienteDao = new ClienteDaoImp();
         clienteDao.guardarCliente(cliente);
 
-        scanner.close();
+        System.out.println("Cliente agregado con éxito.");
+        System.out.println("ID asignado: " + cliente.getId());
+        System.out.println("Presione ENTER para volver al menú principal...");
+
+        scanner.nextLine();
     }
 
     private static void modificarCliente(Scanner scanner) {
 
         System.out.println("****** Modificación de Cliente ******");
 
-        System.out.print("Ingrese el ID del cliente a modificar: ");
-        Long id = scanner.nextLong();
-        scanner.nextLine(); // Consumir el salto de línea
+        // VALIDACIÓN PARA ID
+        Long id = null;
+        do {
+
+            System.out.print("Ingrese el ID del cliente a modificar (solo números): ");
+
+            try {
+                id = scanner.nextLong();
+                scanner.nextLine();
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada no válida. Por favor, ingrese el ID como un número.");
+                scanner.nextLine();
+            }
+
+        } while (id == null);
 
         IClienteDao clienteDao = new ClienteDaoImp();
         Cliente cliente = clienteDao.obtenerClientePorId(id);
 
-        // Verificar si el cliente existe
         if (cliente != null) {
-
             System.out.println("\nCliente encontrado: " + cliente.getNombre() + " " + cliente.getApellido());
+            System.out.println("*** Ingrese los nuevos valores ***");
 
-            System.out.println("--- Ingrese los nuevos valores ---");
-
-            System.out.println("Ingrese el nuevo nombre del cliente:");
+            System.out.println("Ingrese el nuevo nombre del cliente (Actual: " + cliente.getNombre() + "):");
             String nuevonombre = scanner.nextLine();
 
-            System.out.println("Ingrese el nuevo apellido del cliente:");
+            System.out.println("Ingrese el nuevo apellido del cliente (Actual: " + cliente.getApellido() + "):");
             String nuevoapellido = scanner.nextLine();
 
-            System.out.println("Ingrese el nuevo domicilio del cliente:");
+            System.out.println("Ingrese el nuevo domicilio del cliente (Actual: " + cliente.getDomicilio() + "):");
             String nuevodomicilio = scanner.nextLine();
 
-            System.out.println("Ingrese el nuevo dni del cliente:");
-            Integer nuevodni = scanner.nextInt();
-            scanner.nextLine(); // Consumir el salto de línea
+            // VALIDACIÓN PARA NUEVO DNI
+            Integer nuevodni = null;
+            do {
 
-            System.out.println("Ingrese el nuevo estado del cliente (true para activo, false para inactivo):");
-            boolean nuevoestado = scanner.nextBoolean();
-            scanner.nextLine(); // Consumir el salto de línea
+                System.out
+                        .println("Ingrese el nuevo dni del cliente (Actual: " + cliente.getDni() + ", solo números):");
+                try {
+
+                    nuevodni = scanner.nextInt();
+                    scanner.nextLine();
+
+                } catch (InputMismatchException e) {
+
+                    System.out.println("Entrada no válida. Por favor, ingrese solo números para el DNI.");
+                    scanner.nextLine();
+                }
+
+            } while (nuevodni == null);
+
+            // VALIDACIÓN PARA ESTADO
+            Boolean nuevoestado = null;
+            do {
+                System.out.println(
+                        "Ingrese el nuevo estado del cliente (true/false, Actual: " + cliente.isEstado() + "):");
+                try {
+                    nuevoestado = scanner.nextBoolean();
+                    scanner.nextLine();
+                } catch (InputMismatchException e) {
+                    System.out.println(" Entrada no válida. Por favor, ingrese 'true' o 'false'.");
+                    scanner.nextLine(); // Consumir la entrada no válida
+                }
+            } while (nuevoestado == null);
 
             cliente.setNombre(nuevonombre);
             cliente.setApellido(nuevoapellido);
@@ -173,15 +229,22 @@ public class Main {
 
             try {
                 clienteDao.modificarCliente(cliente);
-                System.out.println("Cliente con ID " + id + " modificado exitosamente.");
+                System.out.println(" Cliente con ID " + id + " fue modificado.");
+                System.out.println("Presione ENTER para volver al menú principal...");
+                scanner.nextLine();
             } catch (Exception e) {
-                System.out.println("ERROR al persistir los cambios: " + e.getMessage());
+
+                System.out.println(" ERROR al persistir los cambios:");
+                e.printStackTrace();
+
             }
 
         } else {
-            System.out.println("No se encontró ningún cliente con el ID: " + id + ". No se pudo modificar.");
-        }
 
+            System.out.println("No se encontró ningún cliente con el ID: " + id + ". No se pudo modificar.");
+            System.out.println("Presione ENTER para volver al menú principal...");
+            scanner.nextLine();
+        }
     }
 
     private static void mostrarFacturas() {
@@ -198,4 +261,5 @@ public class Main {
         }
 
     }
+
 }

@@ -14,14 +14,14 @@ import jakarta.persistence.JoinColumn;
 @Table(name = "detalles_de_facturas")
 public class DetalleFactura {
     @Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column (name="det_fa_cantidad", nullable = false)
+    @Column(name = "det_fa_cantidad", nullable = false)
     private int cantidad;
 
-	@Column(name="det_fa_subtotal", nullable = false, precision = 10, scale = 2)
-	private double subtotal;
+    @Column(name = "det_fa_subtotal", nullable = false)
+    private double subtotal;
 
     /* Constructor por defecto */
     public DetalleFactura() {
@@ -61,27 +61,27 @@ public class DetalleFactura {
 
     /* Relacion entre DetalleFactura y Factura */
     @ManyToOne
-    @JoinColumn(name="factura_id")
+    @JoinColumn(name = "factura_id")
     private Factura factura;
-	
+
     /* Relacion entre DetalleFactura y Producto */
     @OneToOne
-    @JoinColumn(name="producto_id")
+    @JoinColumn(name = "producto_id")
     private Producto producto;
 
     /* Metodos */
     @Override
     public String toString() {
-        return "DetalleFactura [id=" + id + ", cantidad=" + cantidad 
+        return "DetalleFactura [id=" + id + ", cantidad=" + cantidad
                 + ", subtotal=" + subtotal + ", factura=" + factura
                 + ", producto=" + producto + "]";
     }
 
-    public void calcularSubtotal () {
+    public void calcularSubtotal() {
         if (producto != null)
             this.subtotal = this.cantidad * producto.getPrecioUnitario();
         else
             this.subtotal = 0;
     }
-    
+
 }
