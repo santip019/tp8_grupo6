@@ -3,15 +3,16 @@ package ar.edu.unju.escmi.entities;
 import java.time.LocalDate;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import jakarta.persistence.JoinColumn;
 
 @Entity
@@ -24,13 +25,13 @@ public class Factura {
     @Column(name = "fa_facha_de_emision", nullable = false)
     private LocalDate fecha;
 
-    @Column(name = "fa_domicilio_cliente")
+    @Column(name = "fa_domicilio_cliente", nullable = false, length = 100)
     private String domicilio;
 
     @Column(name = "fa_total", nullable = false)
     private double total;
 
-    @Transient
+    @Column(name="fa_estado", nullable = false)
     private boolean estado;
 
     /* Constructor por defecto */
@@ -93,7 +94,7 @@ public class Factura {
     private Cliente cliente;
 
     /* Relacion entre DetalleFactura y Factura */
-    @OneToMany(mappedBy = "factura")
+    @OneToMany(mappedBy = "factura", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private List<DetalleFactura> detallesFactura;
 
     /* Metodos */

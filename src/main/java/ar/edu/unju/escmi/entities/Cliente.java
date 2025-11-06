@@ -9,7 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "clientes")
@@ -22,16 +21,16 @@ public class Cliente {
 	@Column(name="cli_nombre", nullable = false, length = 100)
 	private String nombre;
 
-	@Column(name="cli_apellido", nullable = false)
+	@Column(name="cli_apellido", nullable = false, length = 100)
 	private String apellido;
 
-	@Column(name="cli_domicilio")
+	@Column(name="cli_domicilio", nullable = false, length = 100)
 	private String domicilio;
 
 	@Column(name="cli_dni", nullable = false, unique = true)
 	private int dni;
 
-	@Transient
+	@Column(name="cli_estado", nullable = false)
 	private boolean estado;
 
 	/* Constructor por defecto */
