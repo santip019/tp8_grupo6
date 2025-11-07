@@ -3,9 +3,6 @@ package ar.edu.unju.escmi.main;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-/* import ar.edu.unju.escmi.dao.IProductoDao;
-import ar.edu.unju.escmi.dao.imp.ProductoDaoImp;
-import ar.edu.unju.escmi.entities.Producto; */
 import ar.edu.unju.escmi.dao.IClienteDao;
 import ar.edu.unju.escmi.dao.imp.ClienteDaoImp;
 import ar.edu.unju.escmi.entities.Cliente;
