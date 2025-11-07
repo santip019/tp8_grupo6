@@ -149,7 +149,7 @@ public class Main {
         cliente.setEstado(true);
 
         IClienteDao clienteDao = new ClienteDaoImp();
-        clienteDao.guardarCliente(cliente);
+        clienteDao.agregarCliente(cliente);
 
         System.out.println("Cliente agregado con éxito.");
         System.out.println("ID asignado: " + cliente.getId());

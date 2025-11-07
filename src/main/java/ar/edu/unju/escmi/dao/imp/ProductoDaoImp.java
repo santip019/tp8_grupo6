@@ -47,7 +47,7 @@ public class ProductoDaoImp implements IProductoDao {
     }
 
     @Override
-    public Producto obtenerProductoPorId(Long id) {
+    public Producto obtenerProductoPorId(long id) {
         // Inicializamos el EntityManager y la variable de retorno.
         // Usamos 'null' como valor predeterminado si no se encuentra o hay error.
         EntityManager manager = null;

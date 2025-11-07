@@ -6,7 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "productos")
@@ -21,7 +20,7 @@ public class Producto {
     @Column(name = "prod_precio_unitario", nullable = false)
     private double precioUnitario;
 
-    @Transient
+    @Column(name="prod_estado", nullable = false)
     private boolean estado;
 
     /* Constructor por defecto */
