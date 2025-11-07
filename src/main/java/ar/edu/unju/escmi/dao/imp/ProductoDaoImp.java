@@ -1,5 +1,7 @@
 package ar.edu.unju.escmi.dao.imp;
 
+import java.util.List;
+
 import ar.edu.unju.escmi.config.EmfSingleton;
 import ar.edu.unju.escmi.dao.IProductoDao;
 import ar.edu.unju.escmi.entities.Producto;
@@ -76,5 +78,17 @@ public class ProductoDaoImp implements IProductoDao {
         }
 
         return producto;
+    }
+
+    @Override
+    public List<Producto> obtenerProductos() {
+        try {
+            return manager.createQuery("SELECT p FROM Producto p", Producto.class).getResultList();
+        } catch (Exception e) {
+            System.out.println("Error al obtener la lista de productos: " + e.getMessage());
+            return null;
+        } finally {
+            manager.close();
+        }
     }
 }

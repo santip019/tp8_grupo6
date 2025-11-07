@@ -5,5 +5,5 @@ import ar.edu.unju.escmi.entities.DetalleFactura;
 
 public interface IDetalleFacturaDao {
 
-    public List<DetalleFactura> obtenerDetallesFactura (long id);
+    public List<DetalleFactura> obtenerDetallesFactura (long id);//recibe el id de factura
 }
