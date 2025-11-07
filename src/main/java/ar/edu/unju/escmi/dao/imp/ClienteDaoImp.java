@@ -9,10 +9,9 @@ import jakarta.persistence.EntityManager;
 
 public class ClienteDaoImp implements IClienteDao {
 
-    private static EntityManager manager = EmfSingleton.getInstance().getEmf().createEntityManager();
-
     @Override
     public void agregarCliente(Cliente cliente) {
+        EntityManager manager = EmfSingleton.getInstance().getEmf().createEntityManager();
         try {
             manager.getTransaction().begin();
             manager.persist(cliente);
@@ -23,13 +22,14 @@ public class ClienteDaoImp implements IClienteDao {
             }
             System.out.println("No se pudo agregar el cliente");
         } finally {
-            manager.clear();
+            manager.close();
         }
 
     }
 
     @Override
     public void modificarCliente(Cliente cliente) {
+        EntityManager manager = EmfSingleton.getInstance().getEmf().createEntityManager();
         try {
             manager.getTransaction().begin();
             manager.merge(cliente);
@@ -77,6 +77,7 @@ public class ClienteDaoImp implements IClienteDao {
 
     @Override
     public List<Cliente> obtenerClientes() {
+        EntityManager manager = EmfSingleton.getInstance().getEmf().createEntityManager();
         try {
             return manager.createQuery("SELECT c FROM Cliente c", Cliente.class).getResultList();
         } catch (Exception e) {
