@@ -9,11 +9,9 @@ import jakarta.persistence.EntityManager;
 
 public class DetalleFacturaDaoImp implements IDetalleFacturaDao {
 
-
-    private static EntityManager manager = EmfSingleton.getInstance().getEmf().createEntityManager();
-
     @Override
     public List<DetalleFactura> obtenerDetallesFactura(long id) {
+        EntityManager manager = EmfSingleton.getInstance().getEmf().createEntityManager();
         try{
             return manager.createQuery(
                 "SELECT d FROM DetalleFactura d WHERE d.factura.id = :id",

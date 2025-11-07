@@ -9,10 +9,9 @@ import jakarta.persistence.EntityManager;
 
 public class ProductoDaoImp implements IProductoDao {
 
-    private static EntityManager manager = EmfSingleton.getInstance().getEmf().createEntityManager();
-
     @Override
     public void agregarProducto(Producto producto) {
+        EntityManager manager = EmfSingleton.getInstance().getEmf().createEntityManager();
         try {
             manager.getTransaction().begin();
             manager.persist(producto);
@@ -23,13 +22,14 @@ public class ProductoDaoImp implements IProductoDao {
             }
             System.out.println("No se pudo agregar el producto");
         } finally {
-            manager.clear();
+            manager.close();
         }
 
     }
 
     @Override
     public void modificarProducto(Producto producto) {
+        EntityManager manager = EmfSingleton.getInstance().getEmf().createEntityManager();
         try {
             manager.getTransaction().begin();
             manager.merge(producto);
@@ -82,6 +82,7 @@ public class ProductoDaoImp implements IProductoDao {
 
     @Override
     public List<Producto> obtenerProductos() {
+        EntityManager manager = EmfSingleton.getInstance().getEmf().createEntityManager();
         try {
             return manager.createQuery("SELECT p FROM Producto p", Producto.class).getResultList();
         } catch (Exception e) {

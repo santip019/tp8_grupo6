@@ -31,7 +31,7 @@ public class Factura {
     @Column(name = "fa_total", nullable = false)
     private double total;
 
-    @Column(name="fa_estado", nullable = false)
+    @Column(name = "fa_estado", nullable = false)
     private boolean estado;
 
     /* Constructor por defecto */
@@ -88,20 +88,42 @@ public class Factura {
         this.estado = estado;
     }
 
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public List<DetalleFactura> getDetallesFactura() {
+        return detallesFactura;
+    }
+
+    public void setDetallesFactura(List<DetalleFactura> detallesFactura) {
+        this.detallesFactura = detallesFactura;
+    }
+
     /* Relacion entre Cliente y Factura */
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
     /* Relacion entre DetalleFactura y Factura */
-    @OneToMany(mappedBy = "factura", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "factura", fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.REMOVE })
     private List<DetalleFactura> detallesFactura;
 
     /* Metodos */
     @Override
     public String toString() {
-        return "Factura [id=" + id + ", fecha=" + fecha + ", domicilio=" + domicilio + ", total=" + total + ", estado="
-                + estado + ", cliente=" + cliente + ", detallesFactura=" + detallesFactura + "]";
+        return "Factura #" + id +
+                "\nFecha: " + fecha +
+                "\nDomicilio: " + domicilio +
+                "\nTotal: $" + total +
+                "\nEstado: " + estado +
+                "\nCliente: " + (cliente != null ? cliente.getNombre() + " " + cliente.getApellido() : "Sin cliente") +
+                "\nCantidad de detalles: " + (detallesFactura != null ? detallesFactura.size() : 0);
     }
 
     public void calcularTotal() {

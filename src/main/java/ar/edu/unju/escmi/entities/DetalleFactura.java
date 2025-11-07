@@ -64,17 +64,35 @@ public class DetalleFactura {
     @JoinColumn(name = "factura_id")
     private Factura factura;
 
+    public Factura getFactura() {
+        return factura;
+    }
+
+    public void setFactura(Factura factura) {
+        this.factura = factura;
+    }
+
     /* Relacion entre DetalleFactura y Producto */
     @OneToOne
     @JoinColumn(name = "producto_id")
     private Producto producto;
 
+    public Producto getProducto() {
+        return producto;
+    }
+
+    public void setProducto(Producto producto) {
+        this.producto = producto;
+    }
+
     /* Metodos */
     @Override
     public String toString() {
-        return "DetalleFactura [id=" + id + ", cantidad=" + cantidad
-                + ", subtotal=" + subtotal + ", factura=" + factura
-                + ", producto=" + producto + "]";
+        return "DetalleFactura #" + id +
+                "\nCantidad: " + cantidad +
+                "\nSubtotal: $" + subtotal +
+                "\nProducto: " + (producto != null ? producto.getDescripcion() : "Sin producto") +
+                "\nFactura ID: " + (factura != null ? factura.getId() : "Sin factura");
     }
 
     public void calcularSubtotal() {
