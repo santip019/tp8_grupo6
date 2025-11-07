@@ -67,4 +67,18 @@ public class FacturaDaoImp implements IFacturaDao {
         }
     }
 
+    @Override
+    public List<Factura> obtenerFacturasMayoresAMedioMillon() {
+        try {
+        double umbral = 500000.0; // puedes cambiarlo o recibirlo como parámetro
+        return manager.createQuery(
+                "SELECT f FROM Factura f WHERE f.total > :umbral",
+                Factura.class).setParameter("umbral", umbral).getResultList();
+        } catch (Exception e) {
+            System.out.println("Error al obtener facturas mayores a medio millón: " + e.getMessage());
+            return java.util.Collections.emptyList();
+        } finally {
+            manager.close();
+        }
+    }
 }
