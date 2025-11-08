@@ -27,30 +27,6 @@ public class FacturaDaoImp implements IFacturaDao {
     }
 
     @Override
-
-    public Factura eliminarFactura(long id) {
-        EntityManager manager = EmfSingleton.getInstance().getEmf().createEntityManager();
-        Factura factura = null;
-        try {
-            factura = manager.find(Factura.class, id);
-            if (factura != null) {
-                manager.getTransaction().begin();
-                manager.remove(factura);
-                manager.getTransaction().commit();
-
-                return factura; // Devolver la factura eliminada
-            } else {
-                System.out.println("Factura con ID " + id + " no encontrada.");
-                return null;
-            }
-        } catch (Exception e) {
-            return null;
-        } finally {
-            manager.close();
-        }
-    }
-
-    @Override
     public void modificarFactura(Factura factura) {
         EntityManager manager = EmfSingleton.getInstance().getEmf().createEntityManager();
         try {

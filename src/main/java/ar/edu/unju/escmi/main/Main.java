@@ -494,30 +494,32 @@ public class Main {
     }
 
     public static void eliminarFactura(Scanner scanner) {
-        long idFactura;
-        System.out.print("Ingrese id de factura a eliminar: ");
+        long idFacturaAEliminar;
+        System.out.println("Ingrese id de factura a eliminar:");
 
-        // Bloque try-catch para manejar errores de entrada y de la BD
         try {
-            // Validación de entrada para evitar InputMismatchException
             if (scanner.hasNextLong()) {
-                idFactura = scanner.nextLong();
+                idFacturaAEliminar = scanner.nextLong();
             } else {
-                System.out.println("Error: La entrada no es un número válido.");
+                System.out.println("Error: La entrada no es un número de ID válido.");
                 scanner.next(); // Consumir la entrada no válida
                 return;
             }
 
-            // Se inicializa el DAO y se llama al método
             IFacturaDao facturaDao = new FacturaDaoImp();
-            Factura facturaEliminada = facturaDao.eliminarFactura(idFactura);
+            Factura f = facturaDao.buscarFacturaPorId(idFacturaAEliminar);
 
-            if (facturaEliminada != null) {
-                System.out.println(" Factura con ID " + idFactura + " eliminada exitosamente.");
+            if (f != null) {
+                f.setEstado(false);
+                facturaDao.modificarFactura(f);
+                System.out.println(" Factura con ID " + idFacturaAEliminar + " eliminada lógicamente.");
+            } else {
+                System.out.println("No se encontró una factura con el ID: " + idFacturaAEliminar);
             }
 
         } catch (Exception e) {
-            System.err.println(" ERROR al intentar eliminar la factura:");
+            System.err.println("ERROR al intentar eliminar la factura:");
+            System.err.println("Mensaje: " + e.getMessage());
         }
 
         System.out.println("Presione ENTER para volver al menú principal...");

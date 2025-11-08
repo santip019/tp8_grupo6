@@ -13,7 +13,5 @@ public interface IFacturaDao {
 
     public List<Factura> obtenerFacturas();
 
-    public Factura eliminarFactura(long id);
-
     public Factura buscarFacturaPorId(long id);
 }
