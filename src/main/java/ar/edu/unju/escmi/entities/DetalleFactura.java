@@ -6,7 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
 
@@ -73,7 +72,7 @@ public class DetalleFactura {
     }
 
     /* Relacion entre DetalleFactura y Producto */
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "producto_id")
     private Producto producto;
 
