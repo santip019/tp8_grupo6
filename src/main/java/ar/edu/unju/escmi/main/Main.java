@@ -31,7 +31,7 @@ public class Main {
             System.out.println("3- Realizar la venta de productos (Alta de una nueva factura).");
             System.out.println("4- Buscar una factura ingresando su número de factura y mostrar todos sus datos.");
             System.out.println("5- Eliminar una factura (eliminación lógica).");
-            System.out.println("6- Eliminar un producto (eliminación lógica).");
+            System.out.println("6- Eliminar un cliente (eliminación lógica).");
             System.out.println("7- Modificar datos de cliente.");
             System.out.println("8- Modificar precio de producto.");
             System.out.println("9- Eliminar producto (eliminación lógica, se usa el atributo estado).");
