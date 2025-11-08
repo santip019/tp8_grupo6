@@ -62,6 +62,7 @@ public class Main {
                     break;
                 case 5:
                     // Lógica para eliminar una factura
+                    eliminarFactura(scanner);
                     break;
                 case 6:
                     // Lógica para eliminar un cliente
@@ -85,6 +86,7 @@ public class Main {
                     break;
                 case 11:
                     // Lógica para mostrar todos los clientes
+                    mostrarClientes(scanner);
                     break;
                 case 12:
                     // Lógica para mostrar facturas que superen $500.000
@@ -110,14 +112,12 @@ public class Main {
         List<Producto> productosDisponibles = productoDao.obtenerProductos();
         List<Cliente> clientesDisponibles = clienteDao.obtenerClientes();
 
-        //Verificar si hay clientes y productos disponibles
-        if(clientesDisponibles==null || clientesDisponibles.stream().filter(Cliente::isEstado).count()==0)
-        {
+        // Verificar si hay clientes y productos disponibles
+        if (clientesDisponibles == null || clientesDisponibles.stream().filter(Cliente::isEstado).count() == 0) {
             System.out.println(" No hay clientes disponibles para realizar la venta.");
             return;
         }
-        if (productosDisponibles==null || productosDisponibles.stream().filter(Producto::isEstado).count()==0)
-        {
+        if (productosDisponibles == null || productosDisponibles.stream().filter(Producto::isEstado).count() == 0) {
             System.out.println(" No hay productos disponibles para realizar la venta.");
             return;
         }
@@ -128,19 +128,20 @@ public class Main {
         Long clienteId = scanner.nextLong();
         Cliente cliente = clienteDao.obtenerClientePorId(clienteId);
 
-        if(cliente == null){
+        if (cliente == null) {
             System.out.println(" No se encontró ningún cliente con el ID: " + clienteId);
             return;
         }
-        
-        //paso 2: si el cliente se encontró, se procede con la creacion de la nueva factura
+
+        // paso 2: si el cliente se encontró, se procede con la creacion de la nueva
+        // factura
         Factura factura = new Factura();
         factura.setCliente(cliente);
         factura.setFecha(LocalDate.now());
         factura.setDomicilio(cliente.getDomicilio());
         factura.setEstado(true);
         factura.setTotal(0.0);
-        
+
         List<DetalleFactura> detalles = new ArrayList<>();
         factura.setDetallesFactura(detalles);
 
@@ -149,44 +150,44 @@ public class Main {
         while (continuarAgregando) {
             System.out.print("\nIngrese ID del producto (0 para finalizar): ");
             Long productoId = scanner.nextLong();
-            
+
             if (productoId == 0) {
                 System.out.println("Se han agregado todos los productos a la factura.\n Calculando total...");
                 continuarAgregando = false;
                 continue;
             }
-            
+
             Producto producto = productoDao.obtenerProductoPorId(productoId);
             if (producto == null) {
                 System.out.println("Producto no encontrado.");
                 continue;
             }
-            
+
             System.out.print("Ingrese cantidad: ");
             int cantidad = scanner.nextInt();
-            
+
             // Se crea el detalle de la factura
             DetalleFactura detalle = new DetalleFactura();
             detalle.setProducto(producto);
             detalle.setCantidad(cantidad);
             detalle.setFactura(factura);
             detalle.calcularSubtotal();
-            
+
             detalles.add(detalle);
-            
+
             System.out.println("Producto agregado: " + producto.getDescripcion() + "\n" +
-                             "Cantidad: " + cantidad + "\n" + "Subtotal: " + detalle.getSubtotal());
+                    "Cantidad: " + cantidad + "\n" + "Subtotal: " + detalle.getSubtotal());
         }
 
-    //Paso 4: calcular el total de la factura
+        // Paso 4: calcular el total de la factura
         factura.calcularTotal();
         System.out.println("Total de la factura: $" + factura.getTotal());
 
-    //Paso 5: Confirmar la venta y guardar la factura
+        // Paso 5: Confirmar la venta y guardar la factura
         System.out.print("\n¿Confirmar venta? (S/N): ");
         scanner.nextLine(); // Limpiar buffer
         String confirmacion = scanner.nextLine();
-        
+
         if (confirmacion.equalsIgnoreCase("S")) {
             try {
                 facturaDao.agregarFactura(factura);
@@ -347,26 +348,25 @@ public class Main {
     }
 
     private static void mostrarFacturas() {
-    System.out.println("--- Mostrar Facturas ---");
-    IFacturaDao facturaDao = new FacturaDaoImp();
-    List<Factura> facturas = facturaDao.obtenerFacturas();
-    System.out.println("Cantidad de facturas encontradas: " + facturas.size());
-    if (facturas != null && !facturas.isEmpty()) {
-        for (Factura factura : facturas) {
-            System.out.println(factura);
-            System.out.println("-------------------------");
+        System.out.println("--- Mostrar Facturas ---");
+        IFacturaDao facturaDao = new FacturaDaoImp();
+        List<Factura> facturas = facturaDao.obtenerFacturas();
+        System.out.println("Cantidad de facturas encontradas: " + facturas.size());
+        if (facturas != null && !facturas.isEmpty()) {
+            for (Factura factura : facturas) {
+                System.out.println(factura);
+                System.out.println("-------------------------");
+            }
+        } else {
+            System.out.println("No hay facturas disponibles para mostrar.");
         }
-    } else {
-        System.out.println("No hay facturas disponibles para mostrar.");
     }
-}
 
-    
     private static void altaProducto(Scanner scanner) {
         System.out.println("\n==== Alta de Producto ====");
         System.out.print("Ingrese la descripción del producto: ");
         String descripcion = scanner.nextLine();
-        
+
         System.out.print("Ingrese el precio unitario: ");
         double precio = scanner.nextDouble();
         scanner.nextLine(); // limpiar buffer
@@ -385,15 +385,15 @@ public class Main {
         System.out.println("\n==== Buscar Factura ====");
         System.out.print("Ingrese el número de la factura: ");
         long id = scanner.nextLong();
-        
+
         IFacturaDao facturaDao = new FacturaDaoImp();
         Factura factura = facturaDao.buscarFacturaPorId(id);
         if (factura != null) {
             System.out.println("\n ==== Factura encontrada ====");
             System.out.println(factura); // Usa el toString() de Factura
-            } else {
-                System.out.println("No se encontró ninguna factura con el ID: " + id);
-            }
+        } else {
+            System.out.println("No se encontró ninguna factura con el ID: " + id);
+        }
 
     }
 
@@ -401,19 +401,19 @@ public class Main {
         System.out.println("\n==== Modificar Precio de Producto ====");
         System.out.print("Ingrese el ID del producto: ");
         Long idProducto = scanner.nextLong();
-        
+
         IProductoDao productoDao = new ProductoDaoImp();
         Producto producto = productoDao.obtenerProductoPorId(idProducto);
         if (producto == null) {
             System.out.println(" No se encontró ningún producto con el ID: " + idProducto);
-        }else{
-        System.out.println("Producto encontrado:");
-        System.out.println(producto);
-        System.out.print("Ingrese el nuevo precio: ");
-        double nuevoPrecio = scanner.nextDouble();
-        producto.setPrecioUnitario(nuevoPrecio);
-        productoDao.modificarProducto(producto);
-        System.out.println(" Precio actualizado correctamente.");
+        } else {
+            System.out.println("Producto encontrado:");
+            System.out.println(producto);
+            System.out.print("Ingrese el nuevo precio: ");
+            double nuevoPrecio = scanner.nextDouble();
+            producto.setPrecioUnitario(nuevoPrecio);
+            productoDao.modificarProducto(producto);
+            System.out.println(" Precio actualizado correctamente.");
         }
     }
 
@@ -423,14 +423,14 @@ public class Main {
         IClienteDao clienteDao = new ClienteDaoImp();
         Cliente c = clienteDao.obtenerClientePorId(idClienteAEliminar); // obtener
         // cliente
-        try{
+        try {
             if (c != null) {
                 c.setEstado(false); // false = marca como eliminado
                 clienteDao.modificarCliente(c); // actualizar en la BD
             } else {
                 System.out.println("No se encontró un cliente con el ID: " + idClienteAEliminar);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println("Error al eliminar cliente: " + e.getMessage());
         }
     }
@@ -441,14 +441,14 @@ public class Main {
         IProductoDao productoDao = new ProductoDaoImp();
         Producto p = productoDao.obtenerProductoPorId(idProductoAEliminar); // obtener
         // producto
-        try{
+        try {
             if (p != null) {
                 p.setEstado(false); // false = marca como eliminado
                 productoDao.modificarProducto(p); // actualizar en la BD
             } else {
                 System.out.println("No se encontró un producto con el ID: " + idProductoAEliminar);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println("Error al eliminar producto: " + e.getMessage());
         }
     }
@@ -457,8 +457,12 @@ public class Main {
         System.out.println("==== Facturas que superan los $500.000 ====");
         IFacturaDao facturaDao = new FacturaDaoImp();
         try {
-            var facturasAltas = facturaDao.obtenerFacturasMayoresAMedioMillon();// usamos var para que java detecte automaticamente el tipo por la inferencia de tipos, sino seria List<Factura>
-            if (facturasAltas != null && !facturasAltas.isEmpty()) {//Si lo que se obtiene es distinto de null y no esta vacio
+            var facturasAltas = facturaDao.obtenerFacturasMayoresAMedioMillon();// usamos var para que java detecte
+                                                                                // automaticamente el tipo por la
+                                                                                // inferencia de tipos, sino seria
+                                                                                // List<Factura>
+            if (facturasAltas != null && !facturasAltas.isEmpty()) {// Si lo que se obtiene es distinto de null y no
+                                                                    // esta vacio
                 for (Factura factura : facturasAltas) {
                     System.out.println(factura);
                     System.out.println("-------------------------");
@@ -470,7 +474,53 @@ public class Main {
             System.out.println("Error al obtener facturas altas: " + e.getMessage());
         }
     }
+
+    public static void mostrarClientes(Scanner scanner) {
+        System.out.println("---- Mostrar Clientes ----");
+        IClienteDao clienteDao = new ClienteDaoImp();
+        List<Cliente> clientes = clienteDao.obtenerClientes();
+        System.out.println("Cantidad de clientes encontrados: " + clientes.size());
+        if (clientes != null && !clientes.isEmpty()) {
+            for (Cliente cliente : clientes) {
+                System.out.println(cliente);
+                System.out.println("-------------------------");
+            }
+        } else {
+            System.out.println("No hay clientes disponibles para mostrar.");
+        }
+
+        System.out.println("Presione ENTER para volver al menú principal...");
+        scanner.nextLine(); // Esperar a que el usuario presione ENTER
+    }
+
+    public static void eliminarFactura(Scanner scanner) {
+        long idFactura;
+        System.out.print("Ingrese id de factura a eliminar: ");
+
+        // Bloque try-catch para manejar errores de entrada y de la BD
+        try {
+            // Validación de entrada para evitar InputMismatchException
+            if (scanner.hasNextLong()) {
+                idFactura = scanner.nextLong();
+            } else {
+                System.out.println("Error: La entrada no es un número válido.");
+                scanner.next(); // Consumir la entrada no válida
+                return;
+            }
+
+            // Se inicializa el DAO y se llama al método
+            IFacturaDao facturaDao = new FacturaDaoImp();
+            Factura facturaEliminada = facturaDao.eliminarFactura(idFactura);
+
+            if (facturaEliminada != null) {
+                System.out.println(" Factura con ID " + idFactura + " eliminada exitosamente.");
+            }
+
+        } catch (Exception e) {
+            System.err.println(" ERROR al intentar eliminar la factura:");
+        }
+
+        System.out.println("Presione ENTER para volver al menú principal...");
+        scanner.nextLine(); // Esperar a que el usuario presione ENTER
+    }
 }
-    
-
-
